@@ -4,14 +4,20 @@ import cmd
 import shlex
 from models.base_model import BaseModel
 from models import storage
-from models import User
+from models.user import User
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from models.city import City
+from models.state import State
+
 
 
 class HBNBCommand(cmd.Cmd):
     """
     """
     prompt = "(hbnb)"
-    classes = ['BaseModel', 'User']
+    classes = ['BaseModel', 'User', 'Place', 'City', 'Review', 'Amenity', 'State']
     
     def do_quit(self, arg):
         """
@@ -87,7 +93,25 @@ class HBNBCommand(cmd.Cmd):
             for key, value in objs.items():
                 if key.split('.')[0] == cmds[0]:
                     print(str(value))
-                            
+     
+    def default(self, arg):
+        arglist = arg.split('.')
+        class_incm_name = arglist[0]
+        cmd = arglist[1].split("(")
+        method_incm = cmd[0]
+        method_dict = {
+             'all': self.do_all,
+             'destroy': self.do_destroy,
+             'update': self.do_update,
+             'show': self.do_show,
+             'count': self.do_count
+        }
+         
+        if method_incm in method_dict.keys():
+            return method_dict[method_incm]("{} {}".format(class_incm_name,''))
+        print("*** Uknown syntax: {}".format(arg))
+        return False
+                               
     def do_update (self, arg):
         cmds = shlex.split(arg)
         if len(cmds) == 0:
@@ -108,13 +132,31 @@ class HBNBCommand(cmd.Cmd):
             else:
                 obj = objs[key]
                 attr_name = cmds[2]
-                attr_val = cmds[3]
+                attr_value = cmds[3]
                 try:
                     attr_value = eval(attr_value)
                 except Exception:
                     pass
                 setattr(obj, attr_name, attr_value)
                 obj.save()
+                
+    def do_count(self, arg):
+        objs = storage.all()
+        cmds = shlex.split(arg)
+        if arg:
+            incoming_class_name = cmds[0]
+        count = 0
+        if cmds:
+            if incoming_class_name in self.classes:
+                for obj in objs.values():
+                    if obj.__class__.__name__ == incoming_class_name:
+                        count += 1
+                print(count)
+            else:
+                print("** Unkown class name **")    
+        else:
+            print("** class name missing **")
+            
                     
     
 if __name__ == '__main__':
