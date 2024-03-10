@@ -1,6 +1,10 @@
+#!/usr/bin/python3
+
 import json
 import os
 from models.base_model import BaseModel
+from models.user import User
+
 
 
 class FileStorage:
@@ -44,6 +48,7 @@ class FileStorage:
             json.dump(serialized, f)
 
                 
+        
       
     def reload(self):
         """deserializes the JSON file to __objects(Only if the JSON file

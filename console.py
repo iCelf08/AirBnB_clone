@@ -4,13 +4,14 @@ import cmd
 import shlex
 from models.base_model import BaseModel
 from models import storage
+from models import User
 
 
 class HBNBCommand(cmd.Cmd):
     """
     """
     prompt = "(hbnb)"
-    classes = ['BaseModel']
+    classes = ['BaseModel', 'User']
     
     def do_quit(self, arg):
         """
@@ -36,8 +37,8 @@ class HBNBCommand(cmd.Cmd):
         elif cmds[0] not in self.classes:
             print("** class doesn't exist **")
         else:
-            new_obj = BaseModel()
-            new_obj.save()
+            new_obj = eval(f"{cmds[0]}.()")
+            storage.save()
             print(new_obj.id)
             
     
