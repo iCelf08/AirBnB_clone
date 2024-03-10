@@ -99,6 +99,7 @@ class HBNBCommand(cmd.Cmd):
         class_incm_name = arglist[0]
         cmd = arglist[1].split("(")
         method_incm = cmd[0]
+        more_arg = cmd[1].split(")")[0]
         method_dict = {
              'all': self.do_all,
              'destroy': self.do_destroy,
@@ -108,7 +109,7 @@ class HBNBCommand(cmd.Cmd):
         }
          
         if method_incm in method_dict.keys():
-            return method_dict[method_incm]("{} {}".format(class_incm_name,''))
+            return method_dict[method_incm]("{} {}".format(class_incm_name, more_arg))
         print("*** Uknown syntax: {}".format(arg))
         return False
                                
