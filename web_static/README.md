@@ -1,0 +1,1 @@
+web_static for AirbnB clone project 
